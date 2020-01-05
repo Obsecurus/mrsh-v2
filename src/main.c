@@ -25,7 +25,7 @@ extern int optind;
 
 
 static void show_help (void) {
-    printf ("\nmrsh-v2  by Frank Breitinger\n"
+    printf ("mrsh-v2  by Frank Breitinger\n"
     		"Copyright (C) 2013 \n"
     		"\n"
     		"Usage: mrsh-v2 [-cgpfrh] [-t val] [-Ll LIST] [FILE/DIR/LIST]* \n"
@@ -84,6 +84,10 @@ int main(int argc, char **argv){
 	    }
 	  }
 
+	// show help text by default if no option is given
+	if(argc == 1) {
+		mode->helpmessage = true;
+	}
 
 	if(mode->helpmessage) {
 	    	show_help();
