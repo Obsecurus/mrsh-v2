@@ -11,7 +11,6 @@
 #include <time.h>
 #include <string.h>
 #include <dirent.h>
-#include <openssl/md5.h>
 #include <limits.h>		/* PATH_MAX */
 #include "../header/main.h"
 #include "../header/helper.h";

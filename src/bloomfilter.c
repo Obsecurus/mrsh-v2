@@ -52,7 +52,6 @@ void add_hash_to_bloomfilter(BLOOMFILTER *bf, uint64 hash_value){
 	//add the hash value to the bloom filter
 	for(int j=0;j<SUBHASHES;j++) {
 
-         //masked_bits = ( *(md5_value) >> (SHIFTOPS*j)) & MASK;
           masked_bits = ( hash_value >> (SHIFTOPS * j)) & MASK;
           byte_pos = masked_bits >> 3;
           bit_pos = masked_bits & 0x7;

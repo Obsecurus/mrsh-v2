@@ -1,9 +1,6 @@
 #include "../header/hashing.h"
 #include "../header/util.h"
 #include <stdio.h>
-#include <openssl/md5.h>
-
-
 
 uint32 roll_hashx(unsigned char c, uchar window[], uint32 rhData[])
 {
@@ -55,14 +52,6 @@ int hashFileToFingerprint(FINGERPRINT *fingerprint, FILE *handle)
     uchar window[ROLLING_WINDOW] = {0};
     uint32 rhData[4]             = {0};
 
-    // Comment these lines 
-    /*
-       MD5_CTX mdContext;
-       MD5_Init (&mdContext);
-       unsigned char md5_value[MD5_DIGEST_LENGTH] = {0}; //16Bytes
-       */
-
-
     if((byte_buffer = (unsigned char*)malloc(sizeof(unsigned char)*fingerprint->filesize))==NULL)
         return -1;
 
@@ -89,8 +78,6 @@ int hashFileToFingerprint(FINGERPRINT *fingerprint, FILE *handle)
 
         if (rValue % BLOCK_SIZE == BLOCK_SIZE-1 || chunk_index >= BLOCK_SIZE_MAX)
         {
-            //MD5_Update (&mdContext, chunk, chunk_index-1);
-            //MD5_Final (md5_value,&mdContext);
             fnv64Bit(chunk, &hashvalue, chunk_index); //,current_index, FNV1_64_INIT);
             add_hash_to_fingerprint(fingerprint, hashvalue);
 
@@ -107,16 +94,6 @@ int hashFileToFingerprint(FINGERPRINT *fingerprint, FILE *handle)
             }
         }
     }
-    //For our last block when using MD5
-    /*
-       MD5_Update (&mdContext, chunk, chunk_index-1);
-       MD5_Final (md5_value,&mdContext);
-       for(j=0;j<SUBHASHES;j++) { 
-       masked_bits = ( *(md5_value) >> (SHIFTOPS * j)) & MASK;
-    //printf("Masked_bits: %d\n", masked_bits);
-    bloom_add(bloom,masked_bits);
-    }
-    */
     fnv64Bit(chunk,&hashvalue, chunk_index);
     add_hash_to_fingerprint(fingerprint, hashvalue);
 
@@ -148,8 +125,6 @@ int hashPacketBuffer(FINGERPRINT *fingerprint, const unsigned char *packet, cons
         chunk[chunk_index++] = packet[i];
         if (rValue % BLOCK_SIZE == BLOCK_SIZE-1) 
         {
-            //MD5_Update (&mdContext, chunk, chunk_index-1);
-            //MD5_Final (md5_value,&mdContext);
             fnv64Bit(chunk,&hashvalue,chunk_index); //,current_index, FNV1_64_INIT);
             add_hash_to_fingerprint(fingerprint, hashvalue);
 
@@ -171,13 +146,4 @@ int hashPacketBuffer(FINGERPRINT *fingerprint, const unsigned char *packet, cons
 
     return 1;
 
-}
-
-
-void print_md5value(unsigned char *md5_value)
-{
-    int i;
-    for(i=0;i<MD5_DIGEST_LENGTH;i++)
-        printf("%02x",md5_value[i]);
-    puts("");
 }

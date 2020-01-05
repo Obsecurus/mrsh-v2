@@ -2,9 +2,6 @@
 #include "../header/config.h"
 #include "../header/util.h"
 #include <stdio.h>
-#include <openssl/md5.h>
-
-
 
 uint32 roll_hashx(unsigned char c, uchar window[], uint32 rhData[])
 {
@@ -149,13 +146,4 @@ int hashPacketBuffer(FINGERPRINT *fingerprint, const unsigned char *packet, cons
 #endif
 
     return 1;
-}
-
-
-void print_md5value(unsigned char *md5_value)
-{
-    int i;
-    for(i=0;i<MD5_DIGEST_LENGTH;i++)
-        printf("%02x",md5_value[i]);
-    puts("");
 }
