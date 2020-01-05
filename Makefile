@@ -6,13 +6,13 @@ NAME=mrsh
 all: debug
 
 debug: ${PROJECT_SRC} ${PROJECT_HDR}
-	gcc -w -ggdb -std=c99 -D_BSD_SOURCE -lcrypto -o ${NAME} ${PROJECT_SRC} -Dnetwork -lm ${CFLAGS} ${LDFLAGS}
+	gcc -w -ggdb -std=c99 -D_BSD_SOURCE -o ${NAME} ${PROJECT_SRC} -Dnetwork -lm ${CFLAGS} ${LDFLAGS}
 
 mrsh: ${PROJECT_SRC} ${PROJECT_HDR}
-	gcc -w -std=c99 -O3 -D_BSD_SOURCE -lcrypto -o ${NAME} ${PROJECT_SRC} -lm ${CFLAGS} ${LDFLAGS}
+	gcc -w -std=c99 -O3 -D_BSD_SOURCE -o ${NAME} ${PROJECT_SRC} -lm ${CFLAGS} ${LDFLAGS}
 
 net: ${PROJECT_SRC} ${PROJECT_HDR}
-	gcc -w -std=c99 -O3 -D_BSD_SOURCE -lcrypto -o ${NAME} ${PROJECT_SRC} -Dnetwork -lm ${CFLAGS} ${LDFLAGS}
+	gcc -w -std=c99 -O3 -D_BSD_SOURCE -o ${NAME} ${PROJECT_SRC} -Dnetwork -lm ${CFLAGS} ${LDFLAGS}
 
 #pg for profiler, gprof. 
 
