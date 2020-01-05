@@ -1,7 +1,7 @@
 PROJECT_SRC = ./src/main.c ./src/util.c src/hashing.c src/bloomfilter.c src/fingerprint.c src/fingerprintList.c src/helper.c
 
 
-NAME=mrsh
+NAME=mrsh-v2
 
 all: debug
 
