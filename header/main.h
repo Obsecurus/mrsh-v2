@@ -16,6 +16,7 @@
 #include "../header/bloomfilter.h"
 
 //FILE    *getFileHandle(char *filename);
+void addPathToFingerprintList(FINGERPRINT_LIST *fpl, char *filename);
 
 #endif	/* MAIN_H */
 

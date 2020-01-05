@@ -40,6 +40,7 @@ int                 fingerprint_destroy(FINGERPRINT *fp);
 
 int                 fingerprint_compare(FINGERPRINT *fingerprint1, FINGERPRINT *fingerprint2);
 int                 bloom_max_score(BLOOMFILTER *bf, FINGERPRINT *fingerprint);
+void                add_new_bloomfilter(FINGERPRINT *fp, BLOOMFILTER *bf);
 void                add_hash_to_fingerprint(FINGERPRINT *fp, uint64 hash_value);
 double              compute_e_min(int blocks_in_bf1, int blocks_in_bf2);
 
