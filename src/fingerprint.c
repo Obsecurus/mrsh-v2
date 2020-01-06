@@ -225,26 +225,34 @@ double compute_e_min(int blocks_in_bf1, int blocks_in_bf2){
 	//return BLOOMFILTERBITSIZE * (1-pow(bloom->probability,5*blocks)-pow(bloom->probability,5*blocks)+pow(tmp_bf->probability,5*(blocks+tmp_bf->count_added_blocks[i])))
 }
 
-
-
-void print_fingerprint(FINGERPRINT *fp){
+char* stringify_fingerprint(FINGERPRINT *fp){
     int j;
+    char* header;
+    char* result;
     BLOOMFILTER *bf = fp->bf_list;
 
     /* FORMAT: filename:filesize:number of filters:blocks in last filter*/
-    printf("%s:%d:%d:%d", fp->file_name, fp->filesize, fp->amount_of_BF, fp->bf_list_last_element->amount_of_blocks);
-    printf(":");
+    asprintf(&header, "%s:%d:%d:%d", fp->file_name, fp->filesize, fp->amount_of_BF, fp->bf_list_last_element->amount_of_blocks);
 
-    while(bf != NULL) {
-    	//Print each Bloom filter as a 2-digit-hex value
+    char* filters = "";
+    while(bf != NULL){
+    	//append each Bloom filter as a 2-digit-hex value
     	for(j=0;j<FILTERSIZE;j++)
-        	printf("%02X", bf->array[j]);
+        	asprintf(&filters, "%s%02X", filters, bf->array[j]);
 
        //move to next Bloom filter
        bf = bf->next;
     }
-    printf("\n\n");
+    asprintf(&result, "%s:%s", header, filters);
+    free(header);
+    free(filters);
+    return result;
+}
 
+void print_fingerprint(FINGERPRINT *fp){
+    char* stringified = stringify_fingerprint(fp);
+    printf("%s\n\n", stringified);
+    free(stringified);
 }
 
 
