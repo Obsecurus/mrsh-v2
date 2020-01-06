@@ -255,7 +255,14 @@ void print_fingerprint(FINGERPRINT *fp){
     free(stringified);
 }
 
-
+char *fingerprint_file(char *filename)
+{
+	FILE *handle = getFileHandle(filename);
+	FINGERPRINT *fp = init_fingerprint_for_file(handle, filename);
+	char *result = stringify_fingerprint(fp);
+	fingerprint_destroy(fp);
+	return stringify_fingerprint(fp);
+}
 
 
 

@@ -47,7 +47,8 @@ double              compute_e_min(int blocks_in_bf1, int blocks_in_bf2);
 //unsigned int        read_input_hash_file(FINGERPRINT_LIST *fpl,FILE *handle);
 
 void                print_fingerprint(FINGERPRINT *fp);
-char*               stringify_fingerprint(FINGERPRINT *fp);
+char                *stringify_fingerprint(FINGERPRINT *fp);
+char                *fingerprint_file(char *filename);
 
 
 #endif	/* BLOOM_H */
