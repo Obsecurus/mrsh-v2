@@ -17,9 +17,6 @@
 #include "../header/util.h";
 
 
-// Global variable for the different modes
-MODES *mode;
-
 extern char *optarg;
 extern int optind;
 

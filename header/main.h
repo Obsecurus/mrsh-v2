@@ -15,6 +15,8 @@
 #include "../header/fingerprintList.h"
 #include "../header/bloomfilter.h"
 
+// Global variable for the different modes
+MODES *mode;
 //FILE    *getFileHandle(char *filename);
 void addPathToFingerprintList(FINGERPRINT_LIST *fpl, char *filename);
 #endif	/* MAIN_H */
