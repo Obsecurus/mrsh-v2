@@ -11,6 +11,11 @@ debug: ${PROJECT_SRC} ${PROJECT_HDR}
 mrsh: ${PROJECT_SRC} ${PROJECT_HDR}
 	gcc -w -std=c99 -O3 -D_BSD_SOURCE -o ${NAME} ${PROJECT_SRC} -lm ${CFLAGS} ${LDFLAGS}
 
+static: ${PROJECT_SRC} ${PROJECT_HDR}
+	gcc -fPIC -w -std=c99 -D_BSD_SOURCE -c ${PROJECT_SRC} ${CFLAGS}
+	ar rcs mrsh.a *.o
+	rm -rf *.o
+
 net: ${PROJECT_SRC} ${PROJECT_HDR}
 	gcc -w -std=c99 -O3 -D_BSD_SOURCE -o ${NAME} ${PROJECT_SRC} -Dnetwork -lm ${CFLAGS} ${LDFLAGS}
 
