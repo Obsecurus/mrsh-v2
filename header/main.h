@@ -17,6 +17,6 @@
 
 //FILE    *getFileHandle(char *filename);
 void addPathToFingerprintList(FINGERPRINT_LIST *fpl, char *filename);
-
+char *fingerprint_file(char *filename);
 #endif	/* MAIN_H */
 

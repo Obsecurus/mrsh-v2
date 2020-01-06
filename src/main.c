@@ -224,5 +224,11 @@ void addPathToFingerprintList(FINGERPRINT_LIST *fpl, char *filename){
 	return;
 }
 
-
-
+char *fingerprint_file(char *filename)
+{
+	FILE *handle = getFileHandle(filename);
+	FINGERPRINT *fp = init_fingerprint_for_file(handle, filename);
+	char *result = stringify_fingerprint(fp);
+	fingerprint_destroy(fp);
+	return stringify_fingerprint(fp);
+}
