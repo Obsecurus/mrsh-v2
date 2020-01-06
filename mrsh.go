@@ -10,24 +10,63 @@ package main
 #include <stdio.h>
 #include <stdint.h>
 #include <fingerprint.h>
+
+void init_mrsh_mode(){
+	mode = (MODES *)malloc(sizeof(MODES));
+	mode->compare = false;
+	mode->gen_compare = false;
+	mode->compareLists = false;
+	mode->file_comparison = true;
+	mode->helpmessage = false;
+	mode->print = false;
+	mode->threshold = 1;
+	mode->recursive = false;
+	mode->path_list_compare = false;
+}
 */
 import "C"
 import (
 	"fmt"
+	"runtime"
 	"unsafe"
 )
 
-// FingerprintFile returns a string represenation of the mrsh-v2 fingerprint of the file
-func FingerprintFile(path string) string {
-	cpath := C.CString("./NOTICE.txt")
+// Fingerprint is a wrapped C pointer
+type Fingerprint struct {
+	ptr *C.FINGERPRINT
+}
+
+func (fp *Fingerprint) String() string {
+	cs := C.stringify_fingerprint(fp.ptr)
+	return C.GoString(cs)
+}
+
+// FingerprintFile returns a pointer I think?
+func FingerprintFile(path string) Fingerprint {
+	cpath := C.CString(path)
 	defer C.free(unsafe.Pointer(cpath))
-	cres := C.fingerprint_file(cpath)
-	defer C.free(unsafe.Pointer(cres))
-	res := C.GoString(cres)
-	return res
+	cres := C.init_fingerprint_for_path(cpath)
+	fp := Fingerprint{cres}
+	runtime.SetFinalizer(&fp, func(x interface{}) {
+		fp := x.(Fingerprint)
+		C.fingerprint_destroy(fp.ptr)
+	})
+	return fp
+}
+
+// FingerprintCompare returns the similarity score between two fingerprints
+func FingerprintCompare(a, b Fingerprint) int {
+	C.init_mrsh_mode()
+	fmt.Println("A:", a.String())
+	fmt.Println("B:", b.String())
+	res := C.fingerprint_compare(a.ptr, b.ptr)
+	fmt.Println("Raw result:", res)
+	return int(res)
 }
 
 func main() {
-	fp := FingerprintFile("NOTICE.txt")
-	fmt.Println("Result:", fp)
+	notice := FingerprintFile("mod.js")
+	license := FingerprintFile("original.js")
+	fmt.Println("Comparison:", FingerprintCompare(notice, license))
+	fmt.Println("Comparison:", FingerprintCompare(notice, notice))
 }
