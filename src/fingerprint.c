@@ -260,13 +260,7 @@ char *fingerprint_file(char *filename)
 	FILE *handle = getFileHandle(filename);
 	FINGERPRINT *fp = init_fingerprint_for_file(handle, filename);
 	char *result = stringify_fingerprint(fp);
-	fingerprint_destroy(fp);
+    // TODO copy this to a new string so I can free up all the rest of the memory
+	//fingerprint_destroy(fp);
 	return stringify_fingerprint(fp);
 }
-
-
-
-
-
-
-
