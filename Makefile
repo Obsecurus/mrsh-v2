@@ -22,7 +22,7 @@ net: ${PROJECT_SRC} ${PROJECT_HDR}
 #pg for profiler, gprof. 
 
 clean :  
-	rm -f mrsh *.o 
+	rm -f ${NAME} *.o mrsh.a
 
 #for DT_DIR feature to work, need to have the _BSD_SOURCE  feature test macro defined. THese are not standard, and GCC does not define the macro when compiling for C99
 # -lm: -l means link a library and -m means a math library. Without this option 
