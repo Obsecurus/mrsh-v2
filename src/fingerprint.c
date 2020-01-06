@@ -49,6 +49,26 @@ FINGERPRINT *init_fingerprint_for_file(FILE *handle, char *filename) {
     return fp;
 }
 
+/**
+ * Creates a Fingerprint for a File (sets filename and filezite)
+ * returns NULL if it is not able to create the bloom filter,
+ * else the allocated FINGERPRINT struct
+ * */
+FINGERPRINT *init_fingerprint_for_path(char *filename) {
+    FINGERPRINT *fp = init_empty_fingerprint();
+    FILE *handle = getFileHandle(filename);
+
+    fp->filesize = find_file_size(handle);
+
+    strcpy(fp->file_name , filename);
+
+    hashFileToFingerprint(fp, handle);
+
+    fclose(handle);
+
+    printf("Amount of bf in new fingerprint: %d\n", fp->amount_of_BF);
+    return fp;
+}
 
 /*
  *  Destroys all filters and sets all memory free

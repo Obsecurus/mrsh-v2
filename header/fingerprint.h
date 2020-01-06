@@ -36,6 +36,7 @@ typedef struct FINGERPRINT {
 
 FINGERPRINT         *init_empty_fingerprint();
 FINGERPRINT         *init_fingerprint_for_file(FILE *handle, char *filename);
+FINGERPRINT         *init_fingerprint_for_path(char *filename);
 int                 fingerprint_destroy(FINGERPRINT *fp);
 
 int                 fingerprint_compare(FINGERPRINT *fingerprint1, FINGERPRINT *fingerprint2);
