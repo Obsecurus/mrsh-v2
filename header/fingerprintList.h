@@ -45,6 +45,7 @@ void 				fingerprint_against_list_comparison(FINGERPRINT_LIST *fpl, FINGERPRINT 
 
 void                print_fingerprintList(FINGERPRINT_LIST *fpl);
 
+int                 read_fingerprint_string(FINGERPRINT *fp, char *stringified);
 unsigned int        read_fingerprint_file(FINGERPRINT_LIST *bloom_arr, FILE *handle);
 
 

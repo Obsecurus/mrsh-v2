@@ -143,6 +143,95 @@ void print_fingerprintList(FINGERPRINT_LIST *fpl){
 	}
 }
 
+int read_fingerprint_string(FINGERPRINT *fp, char *stringified) {
+	unsigned int bytes_read;
+    unsigned char *hex_string, *tokenize, *string_read;   	//the hex string of the hash
+    char delims[] = ":"; 									//separator for the fingerprints in the file
+    int amount_of_BF=0, blocks_in_last_bf=0;
+
+    //hex needs to be doubled because 2 characters is one hex value
+    unsigned char *hex = (unsigned char *) malloc(FILTERSIZE*2 +1);
+
+    string_read = stringified;
+
+    //parse the string read and extract the hashed hexadecimal string
+    /*strtok is used for tokenizing the string (separation delims)*/
+    tokenize = strtok(string_read, delims);
+
+    int counter = 0;
+    while (tokenize != NULL)
+    {
+        switch (counter)
+        {
+        case 0:
+            /*get the filename*/
+            strcpy(fp->file_name, tokenize);
+            break;
+
+        case 1:
+            /*get the filesize*/
+            fp->filesize = atoi(tokenize);
+            break;
+
+        case 2:
+            /*get the count of the filters*/
+            amount_of_BF = atoi(tokenize);
+            break;
+
+        case 3:
+            /* only the last block of the filter have less than max blocks*/
+            blocks_in_last_bf = atoi(tokenize);
+            break;
+
+        case 4:
+            /* hex_string is then the fingerprint */
+            hex_string = (unsigned char *)calloc((strlen(tokenize) + 1), sizeof(unsigned char));
+            strcpy(hex_string, tokenize);
+            break;
+
+        default:
+            fprintf(stderr, "[*] ERROR IN PARSING FILE CONTENT OF HASH STRING");
+            return 0;
+        }
+        tokenize = strtok(NULL, delims);
+        counter++;
+    }
+
+    if (hex_string != NULL)
+    {
+        //Reset bf_list when we read in a LIST
+        fp->bf_list = NULL;
+        fp->bf_list_last_element = NULL;
+
+        for (int i = 0; i <= amount_of_BF; i++)
+        {
+            //create a Bloom filter and add it to the fingerprint
+            BLOOMFILTER *bf = init_empty_BF();
+            add_new_bloomfilter(fp, bf);
+
+            //fill Bloom filter with the hex digest
+            //example: void * memcpy ( void * destination, const void * source, size_t num );
+            memcpy(hex, &hex_string[FILTERSIZE * 2 * i], FILTERSIZE * 2);
+            convert_hex_binary(hex, bf);
+
+            bf->amount_of_blocks = MAXBLOCKS;
+        }
+
+        //The last Bloom filter may not have MAXBLOCKS --> update it
+        fp->bf_list_last_element->amount_of_blocks = blocks_in_last_bf;
+
+        free(hex_string);
+        hex_string = NULL;
+    }
+
+    if (string_read != NULL)
+    {
+        free(string_read);
+        string_read = NULL;
+    }
+
+    return 1;
+}
 
 /*
  * Reads a fingerprint file and stores it in the fingerprint list
