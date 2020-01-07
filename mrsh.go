@@ -42,6 +42,15 @@ type Fingerprint struct {
 	ptr *C.FINGERPRINT
 }
 
+// Init ensures that the Fingerprint has a Finalizer set on it, which allows the C struct to be freed.
+// This should be called on every single Fingerprint as it is constructed.
+func (fp *Fingerprint) Init() {
+	runtime.SetFinalizer(fp, func(x interface{}) {
+		fp := x.(Fingerprint)
+		C.fingerprint_destroy(fp.ptr)
+	})
+}
+
 func (fp *Fingerprint) String() string {
 	cs := C.stringify_fingerprint(fp.ptr)
 	return C.GoString(cs)
@@ -53,10 +62,7 @@ func FingerprintFile(path string) Fingerprint {
 	defer C.free(unsafe.Pointer(cpath))
 	cres := C.init_fingerprint_for_path(cpath)
 	fp := Fingerprint{cres}
-	runtime.SetFinalizer(&fp, func(x interface{}) {
-		fp := x.(Fingerprint)
-		C.fingerprint_destroy(fp.ptr)
-	})
+	fp.Init()
 	return fp
 }
 
