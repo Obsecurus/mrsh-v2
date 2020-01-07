@@ -11,7 +11,12 @@ package main
 #include <stdint.h>
 #include <fingerprint.h>
 
+extern int init_mrsh_done = false;
+
 void init_mrsh_mode(){
+	if (init_mrsh_done) {
+		return;
+	}
 	mode = (MODES *)malloc(sizeof(MODES));
 	mode->compare = false;
 	mode->gen_compare = false;
@@ -22,6 +27,7 @@ void init_mrsh_mode(){
 	mode->threshold = 1;
 	mode->recursive = false;
 	mode->path_list_compare = false;
+	init_mrsh_done = true;
 }
 */
 import "C"
